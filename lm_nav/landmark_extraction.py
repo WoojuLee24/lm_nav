@@ -85,6 +85,26 @@ def text_to_landmarks_gpt3(text: str, simple_prompt: bool = False) -> List[str]:
     )
 
 
+def text_to_landmarks_gemini(text: str, simple_prompt: bool = False) -> List[str]:
+    # Gemini API 키는 환경 변수나 직접 입력으로 설정
+    api_key = os.getenv("GEMINI_API_KEY") 
+    
+    # 구글의 OpenAI 호환 엔드포인트
+    gemini_api_base = "https://generativelanguage.googleapis.com/v1beta/openai/"
+    
+    # Gemini 모델 이름 (무료로 쓰기 좋은 gemini-1.5-flash 권장)
+    # 구버전 엔진 'text-davinci-002' 대신 아래 모델명을 사용합니다.
+    gemini_model = "gemini-1.5-flash" 
+
+    return generic_language_model_api_call(
+        gemini_api_base,
+        api_key,
+        gemini_model,
+        text,
+        simple_prompt=simple_prompt,
+    )
+
+
 def text_to_landmarks_goose_ai(text: str, model: str, simple_prompt: bool = False) -> List[str]:
     return generic_language_model_api_call(
         "https://api.goose.ai/v1", os.getenv("GOOSE_API_KEY"), model, text, postprocess=True,

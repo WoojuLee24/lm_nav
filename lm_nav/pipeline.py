@@ -4,10 +4,17 @@ from lm_nav import optimal_route
 from lm_nav import landmark_extraction
 
 
-def full_pipeline(graph, start_node, landmarks = None, instructions = None, alpha=0.0002, debug=True):
+def full_pipeline(graph, start_node, landmarks = None, instructions = None, alpha=0.0002, debug=True,
+                  model='gpt'):
     if landmarks is None:
         assert instructions is not None, "If landmarks is not provided, instructions must be provided"
-        landmarks = landmark_extraction.text_to_landmarks_gpt3(instructions)
+        
+        if model == 'gpt':
+            landmarks = landmark_extraction.text_to_landmarks_gpt3(instructions)
+        elif model == 'gemini':
+            landmarks = landmark_extraction.text_to_landmarks_gemini(instructions)
+        else:
+            raise ValueError("Unsupported model")
 
     walk_and_metadata = optimal_route.find_optimal_route(
         graph, landmarks, start_node, alpha=alpha
